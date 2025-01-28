@@ -1,0 +1,46 @@
+{% extends "base.html" %} {% block content %}
+<div class="container">
+  <h1>Детали рейса</h1>
+  <p><strong>Отправление:</strong> {{ flight.departure_airport }}</p>
+  <p><strong>Прибытие:</strong> {{ flight.destination_airport }}</p>
+  <p><strong>Время отправления (местное):</strong> {{ flight.departure_time }}</p>
+  <p><strong>Время прибытия (местное):</strong> {{ flight.arrival_time }}</p>
+  <p><strong>Транспортное средство:</strong> {{ flight.vehicle }}</p>
+  <p><strong>Заполненность:</strong> {{ page_obj|length }}/{{ flight.vehicle.capacity }}</p>
+  <h2>Зарегистрированные пассажиры</h2>
+  {% if page_obj %}
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Имя пассажира</th>
+        <th>Номер места</th>
+        <th>Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for reservation in page_obj %}
+      <tr>
+        <td>{{ reservation.passenger_name }}</td>
+        <td>{{ reservation.seat_number }}</td>
+        <td>
+          {% if flight.status == 'open' %}
+          <a href="{% url 'flights:edit_reservation' reservation.id %}" class="btn btn-sm btn-warning"
+            >Редактировать</a
+          >
+          <a href="{% url 'flights:delete_reservation' reservation.id %}" class="btn btn-sm btn-danger">Удалить</a>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>На данный момент нет зарегистрированных пассажиров.</p>
+  {% endif %} {% if flight.status == 'open' %}
+  <a href="{% url 'flights:reserve_flight' flight.id %}" class="btn btn-primary mt-3">Зарегистрировать пассажира</a>
+  {% else %}
+  <p>Регистрация на данный рейс закрыта.</p>
+  {% endif %}
+  <a href="{% url 'flights:edit_flight' flight.id %}" class="btn btn-primary mt-3">Редактировать рейс</a>
+</div>
+{% endblock %}

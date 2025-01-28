@@ -1,0 +1,39 @@
+{% load static %}
+<header>
+  <nav class="navbar navbar-light" style="background-color: lightskyblue">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'flights:index' %}">
+        Аэропорт
+      </a>
+      {% with request.resolver_match.view_name as view_name %}
+        <ul class="nav  nav-pills">
+          <li class="nav-item">
+            <a class="nav-link {% if view_name == 'pages:about' %} text-white {% endif %}" href="{% url 'pages:about' %}">
+              О проекте
+            </a>
+          </li>
+          {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link {% if view_name == 'flights:create_flight' %} text-white {% endif %}" href="{% url 'flights:create_flight' %}">
+              Создать рейс
+            </a>
+          </li>
+            <div class="btn-group" role="group" aria-label="Basic outlined example">
+              <button type="button" class="btn btn-outline-primary"><a class="text-decoration-none text-reset"
+                  href="{% url 'flights:profile' user.username %}">{{ user.username }}</a></button>
+              <button type="button" class="btn btn-outline-primary"><a class="text-decoration-none text-reset"
+                  href="{% url 'logout' %}">Выйти</a></button>
+            </div>
+          {% else %}
+            <div class="btn-group" role="group" aria-label="Basic outlined example">
+              <button type="button" class="btn btn-outline-primary"><a class="text-decoration-none text-reset"
+                  href="{% url 'login' %}">Войти</a></button>
+              <button type="button" class="btn btn-outline-primary"><a class="text-decoration-none text-reset"
+                  href="{% url 'registration' %}">Регистрация</a></button>
+            </div>
+          {% endif %}
+        </ul>
+      {% endwith %}
+    </div>
+  </nav>
+</header>
